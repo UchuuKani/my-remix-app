@@ -1,4 +1,4 @@
-import { useLoaderData } from "remix";
+import { useLoaderData, Link } from "remix";
 import type { LoaderFunction } from "remix";
 import invariant from "tiny-invariant";
 
@@ -15,5 +15,10 @@ export default function PostSlug() {
 
   invariant(post.html, "post should have html content");
 
-  return <main dangerouslySetInnerHTML={{ __html: post.html }} />;
+  return (
+    <main>
+      <Link to="/posts">Home</Link>
+      <div dangerouslySetInnerHTML={{ __html: post.html }} />
+    </main>
+  );
 }
