@@ -69,3 +69,23 @@ export async function createPost(post: NewPost) {
   await fs.writeFile(path.join(postsPath, post.slug + ".md"), md);
   return getPost(post.slug);
 }
+
+export async function deletePost(slug: string) {
+  await fs.unlink(path.join(postsPath, slug + ".md"));
+  // after deleting post, return new list of posts?
+  return getPosts();
+}
+
+interface PostEdit extends NewPost {
+  prevSlug?: string;
+}
+
+export async function editPost(post: PostEdit) {
+  const md = `---\ntitle: ${post.title}\n---\n\n${post.markdown}`;
+  await fs.writeFile(path.join(postsPath, post.slug + ".md"), md);
+
+  invariant(post.prevSlug, "Old slug does not exist");
+
+  await deletePost(post.prevSlug);
+  return getPost(post.slug);
+}
